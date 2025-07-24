@@ -1,0 +1,4 @@
+Strategy,Total Return,Annual Return,Volatility,Sharpe Ratio,Sortino Ratio,Max Drawdown,Calmar Ratio,Win Rate,Profit Factor,VaR (95%),Total Trades
+momentum,5.00%,2.49%,11.80%,0.04,0.06,12.19%,0.20,20.25%,1.14,-1.14%,237
+mean_reversion,6.77%,3.36%,14.43%,0.09,0.14,11.43%,0.29,21.10%,1.48,-1.52%,263
+combined,19.88%,9.59%,12.13%,0.63,0.93,7.88%,1.22,21.58%,1.68,-1.11%,234

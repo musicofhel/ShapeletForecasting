@@ -1,0 +1,101 @@
+{
+  "head_shoulders": {
+    "head_shoulders": 0.10725383220576955,
+    "double_top": 0.14639953582856388,
+    "double_bottom": 0.17227800604804594,
+    "triangle_ascending": 0.16236026696161324,
+    "triangle_descending": 0.10560095895032164,
+    "flag_bull": 0.10169123323868025,
+    "flag_bear": 0.08747937175501756,
+    "wedge_rising": 0.10786501723059207,
+    "wedge_falling": 0.009071777781395795
+  },
+  "double_top": {
+    "head_shoulders": 0.1478212828848992,
+    "double_top": 0.10614207761622145,
+    "double_bottom": 0.14205441553693493,
+    "triangle_ascending": 0.14810478528083718,
+    "triangle_descending": 0.1031695667881024,
+    "flag_bull": 0.1244677433406455,
+    "flag_bear": 0.14955886956313752,
+    "wedge_rising": 0.07095090483647962,
+    "wedge_falling": 0.0077303541527422
+  },
+  "double_bottom": {
+    "head_shoulders": 0.06969882447517617,
+    "double_top": 0.1654522301009622,
+    "double_bottom": 0.08517530565003438,
+    "triangle_ascending": 0.14690695341217788,
+    "triangle_descending": 0.1060010471710703,
+    "flag_bull": 0.17911006157006612,
+    "flag_bear": 0.10518841995743214,
+    "wedge_rising": 0.067275711798669,
+    "wedge_falling": 0.07519144586441191
+  },
+  "triangle_ascending": {
+    "head_shoulders": 0.19579378760359406,
+    "double_top": 0.15537882649438828,
+    "double_bottom": 0.07595136321650013,
+    "triangle_ascending": 0.14077287920414924,
+    "triangle_descending": 0.19837786619511677,
+    "flag_bull": 0.05032213450544671,
+    "flag_bear": 0.09364721126173034,
+    "wedge_rising": 0.0553327544117704,
+    "wedge_falling": 0.034423177107304144
+  },
+  "triangle_descending": {
+    "head_shoulders": 0.17234378933283293,
+    "double_top": 0.1151615080506085,
+    "double_bottom": 0.17697439825141037,
+    "triangle_ascending": 0.061009911215000254,
+    "triangle_descending": 0.15614517986180154,
+    "flag_bull": 0.10140019804268743,
+    "flag_bear": 0.0842981874205388,
+    "wedge_rising": 0.09909747025681961,
+    "wedge_falling": 0.03356935756830054
+  },
+  "flag_bull": {
+    "head_shoulders": 0.13982484661990766,
+    "double_top": 0.0718057376581596,
+    "double_bottom": 0.04686256011652368,
+    "triangle_ascending": 0.10691964260109232,
+    "triangle_descending": 0.15751878076227338,
+    "flag_bull": 0.14055280682328788,
+    "flag_bear": 0.15899309648265375,
+    "wedge_rising": 0.1682813457842132,
+    "wedge_falling": 0.00924118315188861
+  },
+  "flag_bear": {
+    "head_shoulders": 0.13718668412443807,
+    "double_top": 0.15416973312957832,
+    "double_bottom": 0.05409556573761659,
+    "triangle_ascending": 0.1200448935162571,
+    "triangle_descending": 0.1741538143216865,
+    "flag_bull": 0.13643173619110138,
+    "flag_bear": 0.05851210875308727,
+    "wedge_rising": 0.1565187315268928,
+    "wedge_falling": 0.008886732699342002
+  },
+  "wedge_rising": {
+    "head_shoulders": 0.05801188949965224,
+    "double_top": 0.0763755522359655,
+    "double_bottom": 0.16324320267828618,
+    "triangle_ascending": 0.15905103365754053,
+    "triangle_descending": 0.08674544249262887,
+    "flag_bull": 0.1789848003143721,
+    "flag_bear": 0.11221935785747122,
+    "wedge_rising": 0.15599916127736577,
+    "wedge_falling": 0.009369559986717596
+  },
+  "wedge_falling": {
+    "head_shoulders": 0.06474332931128413,
+    "double_top": 0.15329595333755813,
+    "double_bottom": 0.15302652627887048,
+    "triangle_ascending": 0.0643978710135685,
+    "triangle_descending": 0.18115335662733012,
+    "flag_bull": 0.17913976967071915,
+    "flag_bear": 0.08667245855465883,
+    "wedge_rising": 0.06965894273089397,
+    "wedge_falling": 0.04791179247511672
+  }
+}

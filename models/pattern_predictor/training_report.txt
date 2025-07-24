@@ -1,0 +1,51 @@
+============================================================
+PATTERN PREDICTOR TRAINING REPORT
+============================================================
+
+Training completed at: 2025-07-19T13:49:10.367952
+Training time: 17.25 seconds
+
+## Dataset Statistics
+- Training sequences: 4
+- Test sequences: 4
+- Tickers analyzed: 4
+
+## Model Performance
+
+### Accuracy by Horizon
+- 1-step: 91.34%
+- 3-step: 73.41%
+- 5-step: 63.76%
+
+### Confidence Calibration
+- Expected Calibration Error: 0.1075
+- Mean Confidence: 81.23%
+- Mean Accuracy: 91.34%
+
+### Ensemble Weights
+- lstm: 0.10
+- gru: 0.30
+- transformer: 0.40
+- markov: 0.20
+
+### Sample Predictions
+
+Example 1:
+  Input: cluster_2 -> cluster_2 -> cluster_2
+  Predicted: cluster_2 (confidence: 97.15%)
+  Actual: cluster_2
+  Correct: ✓
+
+Example 2:
+  Input: cluster_2 -> cluster_2 -> cluster_2
+  Predicted: cluster_2 (confidence: 97.04%)
+  Actual: cluster_2
+  Correct: ✓
+
+Example 3:
+  Input: cluster_2 -> cluster_2 -> cluster_5
+  Predicted: cluster_5 (confidence: 82.03%)
+  Actual: cluster_5
+  Correct: ✓
+
+============================================================

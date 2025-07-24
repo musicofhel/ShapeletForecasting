@@ -1,0 +1,79 @@
+# Multi-stage build for optimized dashboard image
+FROM python:3.9-slim as builder
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies for building
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    gfortran \
+    libopenblas-dev \
+    liblapack-dev \
+    libhdf5-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# Production stage
+FROM python:3.9-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    libgomp1 \
+    libopenblas0 \
+    liblapack3 \
+    libhdf5-103 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy Python dependencies from builder
+COPY --from=builder /root/.local /root/.local
+
+# Make sure scripts in .local are usable
+ENV PATH=/root/.local/bin:$PATH
+
+# Copy application code
+COPY src/ ./src/
+COPY models/ ./models/
+COPY data/ ./data/
+COPY assets/ ./assets/
+
+# Create necessary directories
+RUN mkdir -p logs cache uploads
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV DASH_DEBUG=False
+ENV DASH_HOST=0.0.0.0
+ENV DASH_PORT=8050
+ENV MODEL_DIR=/app/models
+ENV DATA_DIR=/app/data
+ENV CACHE_DIR=/app/cache
+ENV LOG_LEVEL=INFO
+
+# Create non-root user for security
+RUN useradd -m -u 1000 dashuser && \
+    chown -R dashuser:dashuser /app
+
+# Switch to non-root user
+USER dashuser
+
+# Expose dashboard port
+EXPOSE 8050
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8050/ || exit 1
+
+# Run the dashboard application
+CMD ["python", "-m", "src.dashboard.forecast_app"]

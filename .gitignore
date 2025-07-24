@@ -1,0 +1,133 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+!.env.dashboard.example
+
+# SSL Certificates
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt
+nginx/ssl/*.csr
+!nginx/ssl/README.md
+
+# Logs
+logs/
+*.log
+log/
+
+# Data files (large files)
+data/raw/
+data/processed/*.csv
+data/processed/*.pkl
+!data/processed/.gitkeep
+
+# Model files
+models/saved_models/
+models/checkpoints/
+*.h5
+*.pkl
+*.joblib
+*.pt
+*.pth
+!models/saved_pattern_predictors/.gitkeep
+
+# Cache
+cache/
+.cache/
+*.cache
+dashboard-cache/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.bak
+*.backup
+backups/
+
+# Docker volumes
+volumes/
+docker-volumes/
+
+# Test coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Documentation build
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Monitoring
+prometheus-data/
+grafana-data/
+redis-data/
+
+# Secrets
+secrets/
+*.secret
+credentials/
+
+# Local configuration overrides
+local.yml
+docker-compose.override.yml

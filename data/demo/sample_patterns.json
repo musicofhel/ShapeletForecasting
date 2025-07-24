@@ -1,0 +1,182 @@
+[
+  {
+    "id": "pattern_0",
+    "name": "Pattern A",
+    "type": "bullish",
+    "frequency": 35,
+    "avg_return": 4.718155042808503,
+    "confidence": 0.6460261987393436,
+    "last_seen": "2025-07-13T19:23:47.768269"
+  },
+  {
+    "id": "pattern_1",
+    "name": "Pattern B",
+    "type": "bearish",
+    "frequency": 6,
+    "avg_return": 1.8136603936896707,
+    "confidence": 0.7487639643653434,
+    "last_seen": "2025-06-27T19:23:47.768269"
+  },
+  {
+    "id": "pattern_2",
+    "name": "Pattern C",
+    "type": "neutral",
+    "frequency": 21,
+    "avg_return": 4.411648832389012,
+    "confidence": 0.8027717160540377,
+    "last_seen": "2025-07-05T19:23:47.768269"
+  },
+  {
+    "id": "pattern_3",
+    "name": "Pattern D",
+    "type": "bullish",
+    "frequency": 31,
+    "avg_return": 4.9720791297055085,
+    "confidence": 0.8519821809332493,
+    "last_seen": "2025-06-24T19:23:47.768269"
+  },
+  {
+    "id": "pattern_4",
+    "name": "Pattern E",
+    "type": "bearish",
+    "frequency": 15,
+    "avg_return": 3.3744607912587767,
+    "confidence": 0.7567467498776392,
+    "last_seen": "2025-07-04T19:23:47.768269"
+  },
+  {
+    "id": "pattern_5",
+    "name": "Pattern F",
+    "type": "neutral",
+    "frequency": 10,
+    "avg_return": -1.8499530863843954,
+    "confidence": 0.606783469046484,
+    "last_seen": "2025-07-10T19:23:47.768269"
+  },
+  {
+    "id": "pattern_6",
+    "name": "Pattern G",
+    "type": "bullish",
+    "frequency": 37,
+    "avg_return": 0.8239605000995089,
+    "confidence": 0.7387544884951209,
+    "last_seen": "2025-07-04T19:23:47.768269"
+  },
+  {
+    "id": "pattern_7",
+    "name": "Pattern H",
+    "type": "bearish",
+    "frequency": 18,
+    "avg_return": 2.6591559569222776,
+    "confidence": 0.635277180363371,
+    "last_seen": "2025-06-19T19:23:47.768269"
+  },
+  {
+    "id": "pattern_8",
+    "name": "Pattern I",
+    "type": "neutral",
+    "frequency": 8,
+    "avg_return": 1.4412410706725005,
+    "confidence": 0.8268798124403168,
+    "last_seen": "2025-06-26T19:23:47.768269"
+  },
+  {
+    "id": "pattern_9",
+    "name": "Pattern J",
+    "type": "bullish",
+    "frequency": 20,
+    "avg_return": -0.022855334316566056,
+    "confidence": 0.6101488653391967,
+    "last_seen": "2025-07-06T19:23:47.768269"
+  },
+  {
+    "id": "pattern_10",
+    "name": "Pattern K",
+    "type": "bearish",
+    "frequency": 7,
+    "avg_return": 4.157397187056212,
+    "confidence": 0.7085599351095593,
+    "last_seen": "2025-06-25T19:23:47.768269"
+  },
+  {
+    "id": "pattern_11",
+    "name": "Pattern L",
+    "type": "neutral",
+    "frequency": 34,
+    "avg_return": 2.6797490281252108,
+    "confidence": 0.7106645185444924,
+    "last_seen": "2025-07-15T19:23:47.768269"
+  },
+  {
+    "id": "pattern_12",
+    "name": "Pattern M",
+    "type": "bullish",
+    "frequency": 19,
+    "avg_return": 1.6699354123704362,
+    "confidence": 0.6285973896670842,
+    "last_seen": "2025-06-20T19:23:47.768269"
+  },
+  {
+    "id": "pattern_13",
+    "name": "Pattern N",
+    "type": "bearish",
+    "frequency": 18,
+    "avg_return": 2.498602981202965,
+    "confidence": 0.6898977996622917,
+    "last_seen": "2025-07-15T19:23:47.768269"
+  },
+  {
+    "id": "pattern_14",
+    "name": "Pattern O",
+    "type": "neutral",
+    "frequency": 30,
+    "avg_return": 0.7956748259306492,
+    "confidence": 0.8944776459633428,
+    "last_seen": "2025-07-09T19:23:47.768269"
+  },
+  {
+    "id": "pattern_15",
+    "name": "Pattern P",
+    "type": "bullish",
+    "frequency": 15,
+    "avg_return": 2.9262218123489268,
+    "confidence": 0.7158827143639499,
+    "last_seen": "2025-07-07T19:23:47.768269"
+  },
+  {
+    "id": "pattern_16",
+    "name": "Pattern Q",
+    "type": "bearish",
+    "frequency": 14,
+    "avg_return": -1.4582134355654404,
+    "confidence": 0.7977557939805915,
+    "last_seen": "2025-07-04T19:23:47.768269"
+  },
+  {
+    "id": "pattern_17",
+    "name": "Pattern R",
+    "type": "neutral",
+    "frequency": 39,
+    "avg_return": 4.363479041922793,
+    "confidence": 0.8183481966698839,
+    "last_seen": "2025-07-09T19:23:47.768269"
+  },
+  {
+    "id": "pattern_18",
+    "name": "Pattern S",
+    "type": "bullish",
+    "frequency": 41,
+    "avg_return": 0.270417131015221,
+    "confidence": 0.7591605540492283,
+    "last_seen": "2025-07-10T19:23:47.768269"
+  },
+  {
+    "id": "pattern_19",
+    "name": "Pattern T",
+    "type": "bearish",
+    "frequency": 47,
+    "avg_return": 3.5516608685211786,
+    "confidence": 0.6641337171214308,
+    "last_seen": "2025-06-19T19:23:47.768269"
+  }
+]

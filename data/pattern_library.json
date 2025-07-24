@@ -1,0 +1,218 @@
+{
+  "head_and_shoulders": {
+    "name": "Head and Shoulders",
+    "category": "traditional",
+    "description": "Reversal pattern with three peaks, middle highest",
+    "key_points": [
+      {
+        "position": 0.0,
+        "type": "start"
+      },
+      {
+        "position": 0.2,
+        "type": "left_shoulder_peak"
+      },
+      {
+        "position": 0.3,
+        "type": "left_valley"
+      },
+      {
+        "position": 0.5,
+        "type": "head_peak"
+      },
+      {
+        "position": 0.7,
+        "type": "right_valley"
+      },
+      {
+        "position": 0.8,
+        "type": "right_shoulder_peak"
+      },
+      {
+        "position": 1.0,
+        "type": "end"
+      }
+    ],
+    "validation_rules": {
+      "head_higher_than_shoulders": true,
+      "shoulders_similar_height": 0.1,
+      "valleys_similar_height": 0.1,
+      "minimum_duration": 20
+    },
+    "confidence_threshold": 0.7
+  },
+  "ascending_triangle": {
+    "name": "Ascending Triangle",
+    "category": "traditional",
+    "description": "Continuation pattern with flat top and rising bottom",
+    "key_points": [
+      {
+        "position": 0.0,
+        "type": "start"
+      },
+      {
+        "position": 0.25,
+        "type": "resistance_1"
+      },
+      {
+        "position": 0.5,
+        "type": "resistance_2"
+      },
+      {
+        "position": 0.75,
+        "type": "resistance_3"
+      },
+      {
+        "position": 1.0,
+        "type": "breakout"
+      }
+    ],
+    "validation_rules": {
+      "resistance_level_flat": 0.02,
+      "support_trend_rising": true,
+      "minimum_touches": 2,
+      "volume_pattern": "decreasing"
+    },
+    "confidence_threshold": 0.7
+  },
+  "bull_flag": {
+    "name": "Bull Flag",
+    "category": "traditional",
+    "description": "Continuation pattern with sharp rise followed by consolidation",
+    "key_points": [
+      {
+        "position": 0.0,
+        "type": "flagpole_start"
+      },
+      {
+        "position": 0.3,
+        "type": "flagpole_end"
+      },
+      {
+        "position": 0.65,
+        "type": "flag_middle"
+      },
+      {
+        "position": 1.0,
+        "type": "breakout"
+      }
+    ],
+    "validation_rules": {
+      "flagpole_angle": {
+        "min": 45,
+        "max": 90
+      },
+      "flag_angle": {
+        "min": -30,
+        "max": 0
+      },
+      "flag_duration_ratio": {
+        "min": 0.3,
+        "max": 0.7
+      },
+      "volume_spike_on_breakout": true
+    },
+    "confidence_threshold": 0.7
+  },
+  "double_bottom": {
+    "name": "Double Bottom",
+    "category": "traditional",
+    "description": "Reversal pattern with two similar lows",
+    "key_points": [
+      {
+        "position": 0.0,
+        "type": "start"
+      },
+      {
+        "position": 0.25,
+        "type": "first_bottom"
+      },
+      {
+        "position": 0.5,
+        "type": "middle_peak"
+      },
+      {
+        "position": 0.75,
+        "type": "second_bottom"
+      },
+      {
+        "position": 1.0,
+        "type": "breakout"
+      }
+    ],
+    "validation_rules": {
+      "bottoms_similar": 0.02,
+      "middle_peak_higher": true,
+      "minimum_separation": 10,
+      "volume_pattern": "higher_on_second"
+    },
+    "confidence_threshold": 0.7
+  },
+  "cup_and_handle": {
+    "name": "Cup and Handle",
+    "category": "traditional",
+    "description": "Continuation pattern resembling a tea cup",
+    "key_points": [
+      {
+        "position": 0.0,
+        "type": "cup_start"
+      },
+      {
+        "position": 0.5,
+        "type": "cup_bottom"
+      },
+      {
+        "position": 0.8,
+        "type": "cup_end"
+      },
+      {
+        "position": 0.9,
+        "type": "handle_bottom"
+      },
+      {
+        "position": 1.0,
+        "type": "breakout"
+      }
+    ],
+    "validation_rules": {
+      "cup_shape": "u_shaped",
+      "handle_depth": {
+        "max": 0.5
+      },
+      "handle_duration": {
+        "max": 0.3
+      },
+      "volume_pattern": "decreasing_in_handle"
+    },
+    "confidence_threshold": 0.7
+  },
+  "market_reversal_shapelet": {
+    "name": "Market Reversal Shapelet",
+    "category": "custom",
+    "description": "Custom pattern indicating potential market reversal",
+    "key_points": [
+      {
+        "position": 0.0,
+        "type": "trend_start"
+      },
+      {
+        "position": 0.3,
+        "type": "momentum_peak"
+      },
+      {
+        "position": 0.6,
+        "type": "reversal_point"
+      },
+      {
+        "position": 1.0,
+        "type": "new_trend"
+      }
+    ],
+    "validation_rules": {
+      "momentum_change": true,
+      "volume_spike": true,
+      "reversal_strength": 0.7
+    },
+    "confidence_threshold": 0.65
+  }
+}

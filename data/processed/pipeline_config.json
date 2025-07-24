@@ -1,0 +1,9 @@
+{
+  "n_features_total": 113,
+  "n_features_selected": 20,
+  "feature_categories": {
+    "technical": 11,
+    "pattern": 19,
+    "transition": 9
+  }
+}

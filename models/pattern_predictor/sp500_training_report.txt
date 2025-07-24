@@ -1,0 +1,47 @@
+============================================================
+S&P 500 PATTERN PREDICTOR TRAINING REPORT
+============================================================
+
+Training completed at: 2025-07-19T14:27:08.257401
+Training time: 199.88 seconds
+
+## Dataset Statistics
+- Training sequences: 8000
+- Test sequences: 2000
+- Unique tickers: 100
+- Pattern types: 20
+
+## Model Performance
+
+### Accuracy by Horizon
+- 1-step: 71.00%
+- 3-step: 49.00%
+- 5-step: 37.80%
+
+### Ensemble Weights
+- lstm: 0.40
+- gru: 0.20
+- transformer: 0.30
+- markov: 0.10
+
+### Sample Predictions
+
+Example 1:
+  Input: cluster_18 -> cluster_18 -> cluster_18
+  Predicted: cluster_18
+  Actual: cluster_18
+  Confidence: 77.93%
+
+Example 2:
+  Input: cluster_4 -> cluster_0 -> cluster_14
+  Predicted: cluster_14
+  Actual: cluster_4
+  Confidence: 68.29%
+
+Example 3:
+  Input: cluster_16 -> cluster_0 -> cluster_6
+  Predicted: cluster_6
+  Actual: cluster_6
+  Confidence: 57.71%
+
+============================================================

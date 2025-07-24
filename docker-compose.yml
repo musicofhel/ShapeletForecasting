@@ -1,0 +1,137 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: financial-wavelet-api
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_DIR=/app/models
+      - LOG_LEVEL=INFO
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./models:/app/models:ro
+      - ./logs:/app/logs
+      - ./data:/app/data:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - prediction-network
+
+  # Optional: Add monitoring stack
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - prediction-network
+    depends_on:
+      - api
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - prediction-network
+    depends_on:
+      - prometheus
+
+  # Optional: Add Redis for caching
+  redis:
+    image: redis:alpine
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - prediction-network
+    command: redis-server --appendonly yes
+
+  # Optional: Add nginx for load balancing
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-lb
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    networks:
+      - prediction-network
+    depends_on:
+      - api
+      - dashboard
+
+  # Dashboard service
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: financial-wavelet-dashboard
+    ports:
+      - "8050:8050"
+    environment:
+      - DASH_DEBUG=false
+      - DASH_HOST=0.0.0.0
+      - DASH_PORT=8050
+      - MODEL_DIR=/app/models
+      - DATA_DIR=/app/data
+      - CACHE_DIR=/app/cache
+      - LOG_LEVEL=INFO
+      - REDIS_URL=redis://redis:6379
+      - API_URL=http://api:8000
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env.dashboard
+    volumes:
+      - ./models:/app/models:ro
+      - ./data:/app/data:ro
+      - ./logs/dashboard:/app/logs
+      - dashboard-cache:/app/cache
+      - ./assets:/app/assets:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8050/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - prediction-network
+    depends_on:
+      - redis
+      - api
+
+volumes:
+  prometheus-data:
+  grafana-data:
+  redis-data:
+  dashboard-cache:
+
+networks:
+  prediction-network:
+    driver: bridge

@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-07-19T14:53:16.693362",
+  "tests_run": 8,
+  "failures": 1,
+  "errors": 0,
+  "success": false,
+  "test_details": [
+    {
+      "test": "test_04_end_to_end_pipeline (__main__.TestIntegrationPipeline.test_04_end_to_end_pipeline)",
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\aaron\\AppData\\Local\\Programs\\AppData\\Local\\Programs\\Microsoft VS Code\\financial_wavelet_prediction\\test_integration.py\", line 180, in test_04_end_to_end_pipeline\n    self.assertIsNotNone(pattern_data, \"Pattern extraction failed\")\nAssertionError: unexpectedly None : Pattern extraction failed\n"
+    }
+  ]
+}
