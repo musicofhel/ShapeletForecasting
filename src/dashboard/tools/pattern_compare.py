@@ -26,13 +26,8 @@ from sklearn.manifold import TSNE
 import warnings
 warnings.filterwarnings('ignore')
 
-# Import DTW functionality
-try:
-    from dtaidistance import dtw
-    DTW_AVAILABLE = True
-except ImportError:
-    DTW_AVAILABLE = False
-    print("Warning: dtaidistance not available. Using fallback DTW implementation.")
+# Import DTW functionality from pyts
+from pyts.metrics import dtw
 
 # Import from existing pattern comparison
 from ..visualizations.pattern_comparison import PatternComparison as BasePatternComparison

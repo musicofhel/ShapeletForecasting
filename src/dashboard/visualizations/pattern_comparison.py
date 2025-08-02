@@ -25,13 +25,8 @@ from sklearn.manifold import TSNE
 import warnings
 warnings.filterwarnings('ignore')
 
-# Import DTW functionality
-try:
-    from dtaidistance import dtw
-    DTW_AVAILABLE = True
-except ImportError:
-    DTW_AVAILABLE = False
-    print("Warning: dtaidistance not available. Using fallback DTW implementation.")
+# Import DTW functionality from pyts
+from pyts.metrics import dtw
 
 class PatternComparison:
     """
@@ -93,11 +88,8 @@ class PatternComparison:
                     data1 = self.pattern_data[pattern1_id]['normalized']
                     data2 = self.pattern_data[pattern2_id]['normalized']
                     
-                    # Calculate DTW distance
-                    if DTW_AVAILABLE:
-                        dtw_dist = dtw.distance(data1, data2)
-                    else:
-                        dtw_dist = self._simple_dtw(data1, data2)
+                    # Calculate DTW distance using pyts
+                    dtw_dist = dtw(data1, data2, dist='square', method='classic')
                     
                     # Calculate correlation
                     correlation = np.corrcoef(data1, data2)[0, 1]
@@ -118,22 +110,6 @@ class PatternComparison:
         self.similarity_metrics = metrics
         return metrics
     
-    def _simple_dtw(self, x: np.ndarray, y: np.ndarray) -> float:
-        """Simple DTW implementation as fallback"""
-        n, m = len(x), len(y)
-        dtw_matrix = np.full((n + 1, m + 1), np.inf)
-        dtw_matrix[0, 0] = 0
-        
-        for i in range(1, n + 1):
-            for j in range(1, m + 1):
-                cost = abs(x[i-1] - y[j-1])
-                dtw_matrix[i, j] = cost + min(
-                    dtw_matrix[i-1, j],    # insertion
-                    dtw_matrix[i, j-1],    # deletion
-                    dtw_matrix[i-1, j-1]   # match
-                )
-        
-        return dtw_matrix[n, m]
     
     def create_side_by_side_visualization(self) -> go.Figure:
         """

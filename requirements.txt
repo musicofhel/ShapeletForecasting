@@ -17,6 +17,7 @@ PyWavelets>=1.1.0
 stumpy>=1.9.0
 
 # DTW specific
+pyts>=0.12.0  # For DTW implementation
 numba>=0.54.0  # For JIT compilation in DTW
 joblib>=1.0.0  # For parallel processing
 
