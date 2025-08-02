@@ -18,11 +18,16 @@ def create_header() -> dbc.Navbar:
                 dbc.Col([
                     html.Div([
                         html.I(className="fas fa-chart-line me-2"),
-                        html.H4("Wavelet Forecast Dashboard", className="mb-0 text-white")
+                        html.H4("Wavelet & Shapelet Analysis Dashboard", className="mb-0 text-white")
                     ], className="d-flex align-items-center")
                 ], width="auto"),
                 dbc.Col([
-                    html.Div(id="performance-status", className="text-end")
+                    # Performance status commented out
+                    # html.Div(id="performance-status", className="text-end")
+                    html.Div([
+                        html.I(className="fas fa-wave-square me-2"),
+                        "Real-time Analysis"
+                    ], className="text-end text-white")
                 ], className="ms-auto")
             ], className="g-0 w-100 align-items-center")
         ], fluid=True),
@@ -138,6 +143,22 @@ def create_control_panel() -> dbc.Card:
                 ], md=6)
             ], className="mb-3"),
             
+            # Chart type toggle
+            dbc.Row([
+                dbc.Col([
+                    dbc.Label("Chart Type"),
+                    dbc.RadioItems(
+                        id="chart-type-toggle",
+                        options=[
+                            {"label": "Candlestick", "value": "candlestick"},
+                            {"label": "Line Chart", "value": "line"}
+                        ],
+                        value="candlestick",
+                        inline=True
+                    )
+                ])
+            ], className="mb-3"),
+            
             # Pattern display options
             dbc.Row([
                 dbc.Col([
@@ -180,7 +201,23 @@ def create_control_panel() -> dbc.Card:
                         color="primary",
                         className="w-100"
                     )
-                ])
+                ], md=4),
+                dbc.Col([
+                    dbc.Button(
+                        [html.I(className="fas fa-chart-line me-2"), "Analyze Patterns"],
+                        id="analyze-patterns-button",
+                        color="info",
+                        className="w-100"
+                    )
+                ], md=4),
+                dbc.Col([
+                    dbc.Button(
+                        [html.I(className="fas fa-shapes me-2"), "Discover Shapelets"],
+                        id="discover-shapelets-button",
+                        color="success",
+                        className="w-100"
+                    )
+                ], md=4)
             ])
         ])
     ])
@@ -294,39 +331,58 @@ def create_prediction_panel() -> dbc.Card:
         ])
     ], className="mb-3")
 
-def create_metrics_panel() -> dbc.Card:
-    """Create accuracy metrics panel"""
+# PERFORMANCE METRICS PANEL - COMMENTED OUT AS REQUESTED
+# def create_metrics_panel() -> dbc.Card:
+#     """Create accuracy metrics panel"""
+#     return dbc.Card([
+#         dbc.CardHeader([
+#             dbc.Row([
+#                 dbc.Col([
+#                     html.I(className="fas fa-chart-bar me-2"),
+#                     "Performance Metrics"
+#                 ], width="auto"),
+#                 dbc.Col([
+#                     dcc.Dropdown(
+#                         id="metric-type-dropdown",
+#                         options=[
+#                             {"label": "Accuracy Metrics", "value": "accuracy"},
+#                             {"label": "Return Analysis", "value": "returns"},
+#                             {"label": "Confusion Matrix", "value": "confusion"}
+#                         ],
+#                         value="accuracy",
+#                         clearable=False,
+#                         style={"minWidth": "200px"}
+#                     )
+#                 ], className="ms-auto")
+#             ], className="align-items-center")
+#         ]),
+#         dbc.CardBody([
+#             dcc.Loading(
+#                 id="loading-metrics",
+#                 type="default",
+#                 children=[
+#                     dcc.Graph(
+#                         id="accuracy-metrics",
+#                         config={'displayModeBar': False}
+#                     )
+#                 ]
+#             )
+#         ])
+#     ])
+
+def create_shapelet_panel() -> dbc.Card:
+    """Create shapelet analysis panel"""
     return dbc.Card([
         dbc.CardHeader([
-            dbc.Row([
-                dbc.Col([
-                    html.I(className="fas fa-chart-bar me-2"),
-                    "Performance Metrics"
-                ], width="auto"),
-                dbc.Col([
-                    dcc.Dropdown(
-                        id="metric-type-dropdown",
-                        options=[
-                            {"label": "Accuracy Metrics", "value": "accuracy"},
-                            {"label": "Return Analysis", "value": "returns"},
-                            {"label": "Confusion Matrix", "value": "confusion"}
-                        ],
-                        value="accuracy",
-                        clearable=False,
-                        style={"minWidth": "200px"}
-                    )
-                ], className="ms-auto")
-            ], className="align-items-center")
+            html.I(className="fas fa-shapes me-2"),
+            "Shapelet Analysis"
         ]),
         dbc.CardBody([
             dcc.Loading(
-                id="loading-metrics",
+                id="loading-shapelets",
                 type="default",
                 children=[
-                    dcc.Graph(
-                        id="accuracy-metrics",
-                        config={'displayModeBar': False}
-                    )
+                    html.Div(id="shapelet-analysis")
                 ]
             )
         ])
@@ -343,9 +399,12 @@ def create_pattern_explorer() -> dbc.Card:
             dbc.Tabs([
                 dbc.Tab(label="Pattern Library", tab_id="library"),
                 dbc.Tab(label="Pattern Details", tab_id="details"),
-                dbc.Tab(label="Historical Performance", tab_id="history")
+                dbc.Tab(label="Shapelet Library", tab_id="shapelets"),
+                dbc.Tab(label="Advanced Analysis", tab_id="advanced")
             ], id="pattern-tabs", active_tab="library"),
-            html.Div(id="pattern-tab-content", className="mt-3")
+            html.Div(id="pattern-tab-content", className="mt-3"),
+            # Container for advanced pattern analysis
+            html.Div(id="advanced-pattern-analysis", className="mt-3")
         ])
     ])
 
@@ -386,7 +445,7 @@ def create_forecast_layout() -> html.Div:
             # Progress panel (shown when processing)
             html.Div([
                 create_progress_panel()
-            ], id="progress-panel-container", style={"display": "none"}),
+            ], id="layout-progress-panel", style={"display": "none"}),
             
             # Control panel row
             dbc.Row([
@@ -409,10 +468,10 @@ def create_forecast_layout() -> html.Div:
                         ], lg=4)
                     ], className="mb-3"),
                     
-                    # Metrics row
+                    # Shapelet and Pattern Explorer row
                     dbc.Row([
                         dbc.Col([
-                            create_metrics_panel()
+                            create_shapelet_panel()
                         ], lg=6, className="mb-3 mb-lg-0"),
                         dbc.Col([
                             create_pattern_explorer()
@@ -429,6 +488,7 @@ def create_forecast_layout() -> html.Div:
         dcc.Store(id="pattern-overlay-store"),
         dcc.Store(id="prediction-store"),
         dcc.Store(id="error-store"),
+        dcc.Store(id="shapelet-discovered-store", data=False),
         dcc.Store(id="progress-store", data={
             'current_task': 'Initializing...',
             'progress': 0,
@@ -438,8 +498,8 @@ def create_forecast_layout() -> html.Div:
         
         # Intervals for auto-refresh
         dcc.Interval(id="refresh-interval", interval=30000),  # 30 seconds
-        dcc.Interval(id="metrics-interval", interval=60000),  # 1 minute
-        dcc.Interval(id="performance-interval", interval=5000),  # 5 seconds
+        # dcc.Interval(id="metrics-interval", interval=60000),  # 1 minute - COMMENTED OUT
+        # dcc.Interval(id="performance-interval", interval=5000),  # 5 seconds - COMMENTED OUT
         
         # Error modal
         dbc.Modal([

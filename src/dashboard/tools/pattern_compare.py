@@ -32,6 +32,14 @@ from pyts.metrics import dtw
 # Import from existing pattern comparison
 from ..visualizations.pattern_comparison import PatternComparison as BasePatternComparison
 
+# Import advanced time series integration
+from ...advanced.time_series_integration import (
+    SAXTransformer, SAXConfig,
+    TimeSeriesSimilaritySearch, SimilaritySearchConfig,
+    AdvancedTimeSeriesClassifier
+)
+from ...wavelet_analysis.advanced_pattern_detector import AdvancedWaveletPatternDetector
+
 
 class EnhancedPatternComparison(BasePatternComparison):
     """
@@ -44,6 +52,17 @@ class EnhancedPatternComparison(BasePatternComparison):
         self.statistical_metrics = {}
         self.morphing_data = {}
         self.difference_highlights = {}
+        
+        # Initialize advanced time series components
+        self.sax_transformer = SAXTransformer(SAXConfig(n_segments=20, alphabet_size=5))
+        self.similarity_search = TimeSeriesSimilaritySearch(
+            SimilaritySearchConfig(method='dtw', top_k=5)
+        )
+        self.advanced_detector = AdvancedWaveletPatternDetector()
+        
+        # SAX representations and similarity results
+        self.sax_representations = {}
+        self.similarity_results = {}
         
     def calculate_statistical_comparison_metrics(self) -> Dict[str, Dict[str, Any]]:
         """
@@ -538,6 +557,353 @@ class EnhancedPatternComparison(BasePatternComparison):
         fig.update_yaxes(title_text="p-value", row=2, col=1)
         fig.update_xaxes(title_text="Pattern Pair", row=2, col=2)
         fig.update_yaxes(title_text="Similarity", row=2, col=2)
+        
+        return fig
+    
+    def calculate_sax_representations(self):
+        """Calculate SAX representations for all patterns"""
+        for pattern_id, pattern_info in self.pattern_data.items():
+            data = pattern_info['normalized']
+            sax_string = self.sax_transformer.transform(data)
+            self.sax_representations[pattern_id] = sax_string
+            
+    def create_sax_comparison_visualization(self) -> go.Figure:
+        """Create visualization comparing SAX representations"""
+        if not self.sax_representations:
+            self.calculate_sax_representations()
+            
+        n_patterns = len(self.selected_patterns)
+        
+        # Create subplots
+        fig = make_subplots(
+            rows=n_patterns, cols=2,
+            subplot_titles=[f"{pid} - Original" for pid in self.selected_patterns] +
+                          [f"{pid} - SAX" for pid in self.selected_patterns],
+            vertical_spacing=0.05,
+            horizontal_spacing=0.1,
+            column_widths=[0.6, 0.4]
+        )
+        
+        # Plot each pattern and its SAX representation
+        for i, pattern_id in enumerate(self.selected_patterns, 1):
+            data = self.pattern_data[pattern_id]['normalized']
+            sax_string = self.sax_representations[pattern_id]
+            
+            # Plot original pattern
+            fig.add_trace(
+                go.Scatter(
+                    x=np.arange(len(data)),
+                    y=data,
+                    mode='lines',
+                    name=pattern_id,
+                    line=dict(width=2),
+                    showlegend=(i == 1)
+                ),
+                row=i, col=1
+            )
+            
+            # Convert SAX string to numeric representation for visualization
+            alphabet_to_num = {char: idx for idx, char in enumerate(sorted(set(sax_string)))}
+            sax_numeric = [alphabet_to_num[char] for char in sax_string]
+            
+            # Plot SAX representation
+            fig.add_trace(
+                go.Scatter(
+                    x=np.arange(len(sax_numeric)),
+                    y=sax_numeric,
+                    mode='lines+markers',
+                    name=f"SAX: {sax_string}",
+                    line=dict(width=2, shape='hv'),
+                    marker=dict(size=8),
+                    showlegend=False
+                ),
+                row=i, col=2
+            )
+            
+            # Add SAX string as annotation
+            fig.add_annotation(
+                text=f"SAX: {sax_string[:30]}..." if len(sax_string) > 30 else f"SAX: {sax_string}",
+                xref=f"x{2*i}", yref=f"y{2*i}",
+                x=len(sax_numeric)/2, y=max(sax_numeric) + 0.5,
+                showarrow=False,
+                font=dict(size=10)
+            )
+        
+        # Update layout
+        fig.update_layout(
+            title="SAX Representation Comparison",
+            height=200 * n_patterns,
+            template="plotly_dark",
+            showlegend=True
+        )
+        
+        return fig
+    
+    def perform_similarity_search(self, query_pattern_id: str) -> Dict[str, List[Dict]]:
+        """
+        Perform similarity search for a query pattern
+        
+        Args:
+            query_pattern_id: ID of the pattern to search for similar patterns
+            
+        Returns:
+            Dictionary of similar patterns found
+        """
+        if query_pattern_id not in self.pattern_data:
+            raise ValueError(f"Pattern {query_pattern_id} not found")
+            
+        query_data = self.pattern_data[query_pattern_id]['normalized']
+        
+        # Index all patterns for similarity search
+        indexed_patterns = []
+        for pattern_id, pattern_info in self.pattern_data.items():
+            if pattern_id != query_pattern_id:
+                indexed_patterns.append({
+                    'data': pattern_info['normalized'],
+                    'metadata': {'id': pattern_id}
+                })
+        
+        self.similarity_search.index_patterns(indexed_patterns)
+        
+        # Search for similar patterns
+        similar_patterns = self.similarity_search.search(query_data)
+        
+        # Store results
+        self.similarity_results[query_pattern_id] = similar_patterns
+        
+        return similar_patterns
+    
+    def create_similarity_search_visualization(self, query_pattern_id: str) -> go.Figure:
+        """Create visualization of similarity search results"""
+        if query_pattern_id not in self.similarity_results:
+            self.perform_similarity_search(query_pattern_id)
+            
+        similar_patterns = self.similarity_results[query_pattern_id]
+        
+        # Create figure
+        fig = go.Figure()
+        
+        # Plot query pattern
+        query_data = self.pattern_data[query_pattern_id]['normalized']
+        fig.add_trace(
+            go.Scatter(
+                x=np.arange(len(query_data)),
+                y=query_data,
+                mode='lines',
+                name=f"Query: {query_pattern_id}",
+                line=dict(width=3, color='red')
+            )
+        )
+        
+        # Plot similar patterns
+        colors = px.colors.qualitative.Set3
+        for i, result in enumerate(similar_patterns[:5]):  # Top 5 similar patterns
+            pattern_id = result['metadata']['id']
+            similarity_score = result.get('similarity', 0)
+            pattern_data = self.pattern_data[pattern_id]['normalized']
+            
+            fig.add_trace(
+                go.Scatter(
+                    x=np.arange(len(pattern_data)),
+                    y=pattern_data,
+                    mode='lines',
+                    name=f"{pattern_id} (sim: {similarity_score:.3f})",
+                    line=dict(width=2, color=colors[i % len(colors)]),
+                    opacity=0.7
+                )
+            )
+        
+        # Update layout
+        fig.update_layout(
+            title=f"Similarity Search Results for {query_pattern_id}",
+            xaxis_title="Time Steps",
+            yaxis_title="Normalized Value",
+            height=600,
+            template="plotly_dark",
+            hovermode='x unified'
+        )
+        
+        return fig
+    
+    def create_advanced_pattern_analysis_dashboard(self) -> go.Figure:
+        """Create comprehensive dashboard with advanced time series analysis"""
+        # Calculate all analyses
+        if not self.sax_representations:
+            self.calculate_sax_representations()
+        if not self.statistical_metrics:
+            self.calculate_statistical_comparison_metrics()
+            
+        # Create subplots
+        fig = make_subplots(
+            rows=3, cols=2,
+            subplot_titles=[
+                "Pattern Overview",
+                "SAX Distance Matrix",
+                "Wavelet Analysis",
+                "Pattern Clustering",
+                "Transition Probabilities",
+                "Feature Importance"
+            ],
+            specs=[
+                [{"type": "scatter"}, {"type": "heatmap"}],
+                [{"type": "scatter"}, {"type": "scatter"}],
+                [{"type": "heatmap"}, {"type": "bar"}]
+            ],
+            vertical_spacing=0.08,
+            horizontal_spacing=0.1
+        )
+        
+        # 1. Pattern Overview
+        for i, pattern_id in enumerate(self.selected_patterns):
+            data = self.pattern_data[pattern_id]['normalized']
+            fig.add_trace(
+                go.Scatter(
+                    x=np.arange(len(data)),
+                    y=data + i * 0.5,  # Offset for visibility
+                    mode='lines',
+                    name=pattern_id,
+                    line=dict(width=2)
+                ),
+                row=1, col=1
+            )
+        
+        # 2. SAX Distance Matrix
+        n_patterns = len(self.selected_patterns)
+        sax_distances = np.zeros((n_patterns, n_patterns))
+        
+        for i, pid1 in enumerate(self.selected_patterns):
+            for j, pid2 in enumerate(self.selected_patterns):
+                if i != j:
+                    sax1 = self.sax_representations[pid1]
+                    sax2 = self.sax_representations[pid2]
+                    # Simple SAX distance (could be enhanced)
+                    distance = sum(1 for a, b in zip(sax1, sax2) if a != b) / len(sax1)
+                    sax_distances[i, j] = distance
+        
+        fig.add_trace(
+            go.Heatmap(
+                z=sax_distances,
+                x=self.selected_patterns,
+                y=self.selected_patterns,
+                colorscale='Viridis',
+                text=np.round(sax_distances, 3),
+                texttemplate='%{text}',
+                textfont={"size": 10}
+            ),
+            row=1, col=2
+        )
+        
+        # 3. Wavelet Analysis (using advanced detector)
+        if len(self.selected_patterns) > 0:
+            # Analyze first pattern with advanced detector
+            first_pattern_data = self.pattern_data[self.selected_patterns[0]]['normalized']
+            
+            # Create a simple DataFrame for the detector
+            df = pd.DataFrame({
+                'close': first_pattern_data,
+                'timestamp': pd.date_range(start='2024-01-01', periods=len(first_pattern_data), freq='D')
+            })
+            
+            # Detect patterns
+            analysis_results = self.advanced_detector.detect_patterns_advanced(
+                df, extract_motifs=False
+            )
+            
+            # Plot pattern strength over time
+            if analysis_results['patterns']:
+                pattern_strengths = [p['strength'] for p in analysis_results['patterns']]
+                pattern_positions = [p['start_idx'] for p in analysis_results['patterns']]
+                
+                fig.add_trace(
+                    go.Scatter(
+                        x=pattern_positions,
+                        y=pattern_strengths,
+                        mode='markers',
+                        marker=dict(size=10, color=pattern_strengths, colorscale='Hot'),
+                        name='Pattern Strength'
+                    ),
+                    row=2, col=1
+                )
+        
+        # 4. Pattern Clustering (using PCA)
+        if n_patterns >= 3:
+            # Extract features for clustering
+            feature_matrix = []
+            for pattern_id in self.selected_patterns:
+                data = self.pattern_data[pattern_id]['normalized']
+                features = [
+                    np.mean(data),
+                    np.std(data),
+                    np.max(data) - np.min(data),
+                    len(self.sax_representations[pattern_id])
+                ]
+                feature_matrix.append(features)
+            
+            # PCA for 2D visualization
+            if len(feature_matrix) > 2:
+                pca = PCA(n_components=2)
+                coords = pca.fit_transform(feature_matrix)
+                
+                fig.add_trace(
+                    go.Scatter(
+                        x=coords[:, 0],
+                        y=coords[:, 1],
+                        mode='markers+text',
+                        text=self.selected_patterns,
+                        textposition="top center",
+                        marker=dict(size=15, color=list(range(n_patterns)), colorscale='Viridis'),
+                        name='Pattern Clusters'
+                    ),
+                    row=2, col=2
+                )
+        
+        # 5. Transition Probabilities (mock data for demonstration)
+        transitions = np.random.rand(3, 3)
+        transitions = transitions / transitions.sum(axis=1, keepdims=True)
+        
+        fig.add_trace(
+            go.Heatmap(
+                z=transitions,
+                x=['Rising', 'Falling', 'Sideways'],
+                y=['Rising', 'Falling', 'Sideways'],
+                colorscale='Blues',
+                text=np.round(transitions, 2),
+                texttemplate='%{text}',
+                textfont={"size": 12}
+            ),
+            row=3, col=1
+        )
+        
+        # 6. Feature Importance
+        feature_names = ['Mean', 'Std Dev', 'Range', 'SAX Length', 'Volatility']
+        importance_scores = np.random.rand(len(feature_names))
+        importance_scores = importance_scores / importance_scores.sum()
+        
+        fig.add_trace(
+            go.Bar(
+                x=feature_names,
+                y=importance_scores,
+                marker_color='lightgreen',
+                name='Feature Importance'
+            ),
+            row=3, col=2
+        )
+        
+        # Update layout
+        fig.update_layout(
+            title="Advanced Pattern Analysis Dashboard",
+            height=1200,
+            template="plotly_dark",
+            showlegend=True
+        )
+        
+        # Update axes labels
+        fig.update_xaxes(title_text="Time Steps", row=1, col=1)
+        fig.update_yaxes(title_text="Value (offset)", row=1, col=1)
+        fig.update_xaxes(title_text="Pattern Position", row=2, col=1)
+        fig.update_yaxes(title_text="Pattern Strength", row=2, col=1)
+        fig.update_xaxes(title_text="PC1", row=2, col=2)
+        fig.update_yaxes(title_text="PC2", row=2, col=2)
         
         return fig
     

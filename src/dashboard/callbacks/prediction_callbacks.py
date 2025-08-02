@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 # Thread pool for async operations
 executor = ThreadPoolExecutor(max_workers=4)
 
-def register_prediction_callbacks(app, data_manager, performance_monitor):
+def register_prediction_callbacks(app, data_manager, performance_monitor=None):
     """Register all prediction-related callbacks"""
     
     @app.callback(
@@ -114,7 +114,43 @@ def register_prediction_callbacks(app, data_manager, performance_monitor):
                     ])
                 ])
                 
-            else:  # history tab
+            elif active_tab == "shapelets":
+                # Shapelet library view
+                content = html.Div([
+                    dbc.Row([
+                        dbc.Col([
+                            html.H6("Shapelet Library", className="mb-3"),
+                            html.P("Discovered shapelets with SAX labels", className="text-muted"),
+                            html.Hr(),
+                            # Get cached shapelets if available
+                            html.Div(id="shapelet-library-content", children=[
+                                dbc.Alert(
+                                    [
+                                        html.I(className="fas fa-info-circle me-2"),
+                                        "Click 'Discover Shapelets' button to populate the library"
+                                    ],
+                                    color="info"
+                                )
+                            ])
+                        ])
+                    ])
+                ])
+                
+            elif active_tab == "advanced":
+                # Advanced analysis view
+                content = html.Div([
+                    dbc.Row([
+                        dbc.Col([
+                            html.H6("Advanced Pattern Analysis", className="mb-3"),
+                            html.P("Click 'Analyze Patterns' button to perform advanced analysis", 
+                                   className="text-muted"),
+                            html.Hr(),
+                            html.Div(id="advanced-analysis-placeholder")
+                        ])
+                    ])
+                ])
+                
+            else:  # history tab (fallback)
                 # Historical performance view
                 content = html.Div([
                     dbc.Row([
@@ -128,9 +164,10 @@ def register_prediction_callbacks(app, data_manager, performance_monitor):
                     ])
                 ])
             
-            # Record performance
-            duration = time.time() - start_time
-            performance_monitor.record_callback_time(duration)
+            # Record performance - only if monitor is provided
+            if performance_monitor:
+                duration = time.time() - start_time
+                performance_monitor.record_callback_time(duration)
             
             return content
             
@@ -177,9 +214,10 @@ def register_prediction_callbacks(app, data_manager, performance_monitor):
             # Create statistics table
             stats_table = create_pattern_stats_table(pattern_id)
             
-            # Record performance
-            duration = time.time() - start_time
-            performance_monitor.record_callback_time(duration)
+            # Record performance - only if monitor is provided
+            if performance_monitor:
+                duration = time.time() - start_time
+                performance_monitor.record_callback_time(duration)
             
             return fig, stats_table
             
@@ -235,9 +273,10 @@ def register_prediction_callbacks(app, data_manager, performance_monitor):
                 }
             }
             
-            # Record performance
-            duration = time.time() - start_time
-            performance_monitor.record_callback_time(duration)
+            # Record performance - only if monitor is provided
+            if performance_monitor:
+                duration = time.time() - start_time
+                performance_monitor.record_callback_time(duration)
             
             return predictions
             
@@ -285,9 +324,10 @@ def register_prediction_callbacks(app, data_manager, performance_monitor):
             # Create results display
             results = create_match_results_display(matches)
             
-            # Record performance
-            duration = time.time() - start_time
-            performance_monitor.record_callback_time(duration)
+            # Record performance - only if monitor is provided
+            if performance_monitor:
+                duration = time.time() - start_time
+                performance_monitor.record_callback_time(duration)
             
             return results
             

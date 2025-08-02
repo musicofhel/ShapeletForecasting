@@ -1,5 +1,5 @@
 """Dashboard package initialization"""
 
-from .forecast_app import app, DataManager, PerformanceMonitor
+# Empty init file - all functionality is now in run_dashboard.py
 
-__all__ = ['app', 'DataManager', 'PerformanceMonitor']
+__all__ = []
